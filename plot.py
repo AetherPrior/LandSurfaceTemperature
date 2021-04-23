@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from statsmodels.tsa.stattools import adfuller
+import statsmodels.api as sm
 def plot_series(filename):
     df = pd.read_csv(filename)
     df.columns = ['date','lat','long','temp']
@@ -25,7 +26,14 @@ def plot_series(filename):
         plt.subplot(2,4,i)
         plt.scatter(df['temp'][0:-i], df['temp'][i:])
     plt.show()
+    plt.clf()
+
+    fig, ax = plt.subplots(2,1)
+    fig = sm.graphics.tsa.plot_acf(df['temp'], lags=400, ax=ax[0])
+    fig = sm.graphics.tsa.plot_pacf(df['temp'], lags=400, ax=ax[1])
+    plt.show()
     
+    ## We will probably need an ARIMA differnce term of 1, an AR of 2, and an MA of 1
     
 if __name__ == '__main__':
     filename = input("Enter file: ")
